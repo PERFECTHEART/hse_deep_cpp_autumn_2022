@@ -55,7 +55,7 @@ unsigned int Data::Store( std::string str, unsigned int pos)
 {																																								
 	std::locale	loc;
 	bool isnumber = true;
-	unsigned int fin;
+	unsigned int fin, numpos;
 
 	while( std::isspace( str[pos], loc ) && str.length() > pos )
 	{
@@ -76,11 +76,13 @@ unsigned int Data::Store( std::string str, unsigned int pos)
 	{
 		if( isnumber )
 		{
+			// Save pos to keep leading zeros if digits should be parsed as string
+			numpos = pos;
 			// Truncate leading zeros
-			while(str[pos] == '0' && str.length() > 1)
-				pos++;
-			if( fin-pos > MAX_UINT64.length() || 
-				( fin-pos == MAX_UINT64.length() && (MAX_UINT64.compare( str.substr(pos,fin-pos) ) < 0) ) )
+			while(str[numpos] == '0' && str.length() > 1)
+				numpos++;
+			if( fin - numpos > MAX_UINT64.length() || 
+				( fin - numpos == MAX_UINT64.length() && (MAX_UINT64.compare( str.substr(pos, fin - numpos) ) < 0) ) )
 			{
 				isnumber = false;
 			}
@@ -88,7 +90,7 @@ unsigned int Data::Store( std::string str, unsigned int pos)
 		}
 		if( isnumber )
 		{
-			std::istringstream iss( str.substr(pos,fin-pos) );
+			std::istringstream iss( str.substr(pos, fin - numpos) );
 
 			iss >> num;
 			len = 0;
