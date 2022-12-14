@@ -1,5 +1,6 @@
 #include "matrix.hpp"
 #include <random>
+#include <time.h>
 
 int main()
 {
@@ -24,6 +25,7 @@ int main()
 	cout << "m + m2:" << endl << m + m2 << endl;
 	m *= 3;
 	cout << "m *= 3:" << endl << m << endl;
+	srand(time(NULL));
 	r = 2 + rand() % ( 6 - 2 + 1 );
 	c = 2 + rand() % ( 10 - 2 + 1 );
 	cout << "r: " << r << " c: " << c << endl;
@@ -31,9 +33,15 @@ int main()
 	cout << "m1:" << endl << m1 << endl;
 	cout << "m == m1: " << boolalpha << (m == m1) << endl;
 	cout << "m == m: " << boolalpha << (m == m) << endl;
-	cout << "m[6][4] = 5;\n";
-	m[6][4] = 5;
-	cout << "m[0][3] = 33;\n";
-	m[0][3] = 33;
+	if( rand() % 2 == 1 )
+	{
+		cout << "m[6][4] = 5;\n";
+		m[6][4] = 5;
+	}
+	else
+	{
+		cout << "m[0][3] = 33;\n";
+		m[0][3] = 33;
+	}
 	return 0 ; 
 }
