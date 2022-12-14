@@ -1,4 +1,5 @@
 #include "matrix.hpp"
+using namespace std;
 
 static size_t sd2;
 
@@ -24,7 +25,6 @@ Matrix::Matrix (const Matrix & rhs) //copy Matrix constructor
 }
 
 size_t Matrix::getRows () const { return d1; }
-	
 size_t Matrix::getColumns () const { return d2; }
 
 Matrix Matrix::operator + (const Matrix & rhs) const
@@ -81,4 +81,14 @@ BASE_TYPE & Matrix::Proxy::operator[] (const size_t &index) const
 	if( sd2 != 0 && index >= sd2 ) 
 		throw std::out_of_range("Column index " + to_string(index) + " out of range [0.." + to_string(sd2-1) + "]");
 	return row[index];
+}
+ostream & operator<<( ostream & os, const Matrix & m)
+{
+	for (size_t i=0; i < m.d1; ++i) {
+		for (size_t j=0; j < m.d2; ++j) {
+			os << m.matrix[i][j] << "\t" ;
+		}
+		os << '\n';
+	}
+	return os;
 }

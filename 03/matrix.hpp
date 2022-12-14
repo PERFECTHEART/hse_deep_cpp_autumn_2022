@@ -35,14 +35,5 @@ public:
 	size_t 	getRows()const;
 	size_t 	getColumns()const;
 	Proxy operator[](const size_t &index )const;
-
-	friend std::ostream &operator<<(std::ostream &os, const Matrix &m) {
-		for (size_t i=0; i < m.d1; ++i) {
-			for (size_t j=0; j < m.d2; ++j) {
-				os << m.matrix[i][j] << "\t" ;
-			}
-			os << '\n';
-		}
-		return os;
-	}
+	friend ostream & operator<<( ostream & , const Matrix & );
 };
