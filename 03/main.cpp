@@ -5,6 +5,7 @@ int main()
 {
 	Matrix m(5, 3);
 	Matrix m2(5,3);
+	size_t r, c;
 
 	for( size_t i=0; i<m.getRows(); i++)
 		for(size_t j=0; j<m.getColumns(); j++)
@@ -23,7 +24,6 @@ int main()
 	cout << "m + m2:" << endl << m + m2 << endl;
 	m *= 3;
 	cout << "m *= 3:" << endl << m << endl;
-	size_t r, c;
 	r = 2 + rand() % ( 6 - 2 + 1 );
 	c = 2 + rand() % ( 10 - 2 + 1 );
 	cout << "r: " << r << " c: " << c << endl;
