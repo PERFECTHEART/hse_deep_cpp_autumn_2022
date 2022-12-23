@@ -16,7 +16,6 @@ int main()
 	std::cout << x << " - -100: " << x - (-100) << std::endl;
 	std::cout << x << " * -100: " << x * (-100) << std::endl;
 
-
 	BigInt z("-000");
 	std::cout << "z = -000: " << z << std::endl;
 
@@ -28,25 +27,25 @@ int main()
 
 	x1 = -x1;
 	std::cout << "x1 = -x1: " << x1 << std::endl;
-
+	
 	z = -z;
 	std::cout << "z = -z: "  << z << std::endl;
 
-	assert(x<y);
-	assert(x<=y);
-	assert(!(x==y));
-	assert(!(x>y));
-	assert(!(x>=y));
-	assert(x==x);
-	assert(x!=y);
+	assert( x < y );
+	assert( x <= y );
+	assert( !(x == y) );
+	assert( !(x > y) );
+	assert( !(x >= y) );
+	assert( x == x );
+	assert( x != y );
 
-	assert(!(y<x));
-	assert(!(y<=x));
-	assert(!(y==x));
-	assert((y>x));
-	assert((y>=x));
-	assert(!(y==x));
-	assert(y!=x);
+	assert( !(y < x) );
+	assert( !(y <= x) );
+	assert( !(y == x) );
+	assert( y > x );
+	assert( y >= x );
+	assert( !(y == x) );
+	assert( y != x);
 
 	exit(0);
 }

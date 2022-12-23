@@ -1,11 +1,9 @@
 #include "biginteger.hpp"
 #include <string>
+#include <string.h>
 
-BigInt::BigInt()
+BigInt::BigInt(): data(new BASE_TYPE[1]), len(1), sign(ZERO)
 {
-	len = 1;
-	sign = ZERO;
-	data = new BASE_TYPE[len];
 	this->zero_data();
 }
 
@@ -18,7 +16,6 @@ void BigInt::zero_data()
 {
 	for( size_t i = 0; i < len; i++ )
 		data[i] = 0;
-//	sign = ZERO;
 }
 
 void BigInt::no_leading_zeros()
@@ -39,7 +36,7 @@ void BigInt::no_leading_zeros()
 	}
 	// Ноль - всегда положительный и имеет особый знак 0
 	if( len == 1 && data[0] == 0) {
-		sign = '0';
+		sign = ZERO;
 	}
 }
 
@@ -91,14 +88,9 @@ BigInt::BigInt(std::string str) {
 	}
 }
                                 
-BigInt::BigInt (const BigInt & rhs)	// копирующий конструктор
+BigInt::BigInt (const BigInt & rhs):data(new BASE_TYPE[rhs.len]), len(rhs.len), sign(rhs.sign)	// копирующий конструктор
 {
-	len = rhs.len;
-	sign = rhs.sign;
-	data = new BASE_TYPE[len];
-	for(size_t i=0; i<rhs.len; ++i) {
-		data[i] = rhs.data[i];
-	}
+	memcpy(data, rhs.data, len * sizeof(BASE_TYPE));
 }
 
 BigInt BigInt::operator -()
@@ -184,10 +176,10 @@ BigInt BigInt::operator -(const BigInt& num2) const
 	else if (sign == MINUS && num2.sign == MINUS) {	// -3 - -9 = -3 + 9 = 9 - 3
 		res = -lnum2 - -lnum1;
 	}
-	else if ( lnum1 != lnum2 ) { // знаки разные, оба числа ненулевые
+	else if ( lnum1 != lnum2 ) { // Знаки разные, оба числа ненулевые
 		if( lnum1 < num2 ) { // второе число больше по модулю, чем первое. Знак минус в итоге
 			res.sign = MINUS;
-			for( size_t i = 0; i < num2.len; i++ ) { // копируем 2 число в результат и вычитаем в столбик
+			for( size_t i = 0; i < num2.len; i++ ) { // Копируем 2 число в результат и вычитаем в столбик
 				res.data[newlen-i-1] = num2.data[num2.len-i-1];
 			}
 			for( size_t i = 0; i < len; i++ ) {
@@ -200,7 +192,7 @@ BigInt BigInt::operator -(const BigInt& num2) const
 		}
 		else {
 			res.sign = PLUS;
-			for( size_t i = 0; i < len; i++ ) { // копируем 1 число в результат
+			for( size_t i = 0; i < len; i++ ) { // Копируем 1 число в результат
 				res.data[newlen-i-1] = data[len-i-1];
 			}
 			for( size_t i = 0; i < num2.len; i++ ) {
@@ -261,15 +253,6 @@ void BigInt::Debug()
 #endif
 }
 
-BigInt BigInt::operator =(const BigInt & rhs)	// перегружаем оператор присваивания
-{
-	sign = rhs.sign;
-	len = rhs.len;
-	for( size_t i = 0; i < len; ++i)
-		data[i] = rhs.data[i];
-	return *this;
-}
-
 bool BigInt::operator ==(const BigInt& num2) const
 {
 	bool res = true;
@@ -312,7 +295,7 @@ bool BigInt::operator <(const BigInt& num2) const
 		else if( len > num2.len ) {
 			res = (sign == MINUS);
 		}
-		else { // оба числа одной длины
+		else { // Оба числа одной длины
 			for( size_t i=0; i<len; ++i ) {
 				if (data[i] < num2.data[i] && sign == PLUS && num2.sign == PLUS) {
 					res = true;
@@ -342,4 +325,23 @@ bool BigInt::operator <=(const BigInt& num2) const
 bool BigInt::operator >(const BigInt& num2) const
 {
 	return !(*this <= num2);
+}
+
+BigInt BigInt::operator =(const BigInt & rhs)	// перегружаем оператор =
+{
+	len = rhs.len;
+	sign = rhs.sign;
+	memcpy( data, rhs.data, len * sizeof(BASE_TYPE));
+	return *this;
+}
+
+BigInt& BigInt::operator =(BigInt&& num2) // присваивание перемещением
+{
+	if( this != &num2 ) {
+		data = num2.data;
+		len = num2.len;
+		sign = num2.sign;
+		num2.data = nullptr;
+	}
+	return *this;
 }
