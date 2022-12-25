@@ -1,6 +1,6 @@
-#include <gtest/gtest.h>
+#include <cassert>
 #include <iostream>
-#include "serializer.cpp"
+#include "serializer.hpp"
 #include <string>
 
 int main(int argc, char** argv)
@@ -15,18 +15,16 @@ int main(int argc, char** argv)
 	Deserializer deserializer(stream);
 
 	serializer.save(y);
-std::cout << u.a << " " << (u.b ? "true" : "false") << " " << u.c << std::endl;
+	std::cout << u.a << " " << (u.b ? "true" : "false") << " " << u.c << std::endl;
 	err = deserializer.load(u);
-std::cout << u.a << " " << (u.b ? "true" : "false") << " " << u.c << std::endl;
-std::cout << std::endl;
+	std::cout << u.a << " " << (u.b ? "true" : "false") << " " << u.c << std::endl << std::endl;
 	assert( err == Error::NoError);
 	assert( y.a == u.a && y.b == u.b && y.c == u.c );
 
 	serializer.save(x);
-std::cout << y.a << " " << (y.b ? "true" : "false") << " " << y.c << std::endl;
+	std::cout << y.a << " " << (y.b ? "true" : "false") << " " << y.c << std::endl;
 	err = deserializer.load(y);
-std::cout << y.a << " " << (y.b ? "true" : "false") << " " << y.c << std::endl;
-std::cout << std::endl;
+	std::cout << y.a << " " << (y.b ? "true" : "false") << " " << y.c << std::endl << std::endl;
 	assert(err == Error::CorruptedArchive);
 
 	serializer.save(z);
