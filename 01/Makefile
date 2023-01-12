@@ -1,6 +1,6 @@
 CC=g++
-FLAGS=-std=c++03 -std=gnu++0x -Wall -pedantic -Werror -Wextra -DDEBUG0
-TEST_LIB=
+FLAGS=-std=c++20 -std=gnu++0x -Wall -pedantic -Werror -Wextra -DDEBUG -O3
+TEST_LIB=-lgtest -lgtest_main -lpthread
 
 all: allocator test_bin
 
@@ -10,8 +10,8 @@ allocator: allocator.cpp allocator.hpp
 test_bin: allocator.o tests.cpp
 	$(CC) $(FLAGS) allocator.o tests.cpp -o test_bin $(TEST_LIB)
 
-test:
-	./test_bin
+test: allocator.o test_bin.exe
+	test_bin.exe
 
 clean:
-	rm -f *.o test_bin.*
+	del *.o test_bin.*

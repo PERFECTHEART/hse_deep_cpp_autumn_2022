@@ -3,18 +3,20 @@
 void Allocator::makeAllocator(size_t maxSize)
 {
 	if( m_memstart != nullptr ) {
-		free( m_memstart );
+		delete m_memstart;
 		m_memstart = nullptr;
 		#ifdef DEBUG
 			cout << "Memory reallocated\n";
 		#endif
 	}
-	m_memstart = (char *) malloc( maxSize );
-	m_offset = 0;
+	if ( maxSize > 0)
+		m_memstart = new char[maxSize];
+	m_offset = (size_t) 0;
 	if( m_memstart == nullptr ) {
 		#ifdef DEBUG
-			cout << "Cannot allocate memory\n";
+			cout << "Cannot allocate " << maxSize << " bytes of memory\n";
 		#endif
+		m_total = (size_t) 0;
 	}
 	else {
 		m_total = maxSize;
@@ -24,9 +26,20 @@ void Allocator::makeAllocator(size_t maxSize)
 	#endif
 }
 
+size_t Allocator::getSize()
+{
+	return m_total - m_offset;
+}
+
+size_t Allocator::getOffset()
+{
+	return m_offset;
+}
+
 char *Allocator::alloc(size_t size)
 {
 	char *ptr = nullptr;
+
 	if( size <= m_total - m_offset ) {
 		ptr = m_memstart + m_offset;
 		m_offset = m_offset + size;
@@ -36,7 +49,7 @@ char *Allocator::alloc(size_t size)
 	}
 	else {
 		#ifdef DEBUG
-			cout << "Not enough memory\n";
+			cout << size << " bytes allocating... Not enough memory in allocator\n";
 		#endif
 	}
 	#ifdef DEBUG
@@ -62,9 +75,9 @@ Allocator::Allocator() {
 
 Allocator::~Allocator() {
 	if( m_memstart != nullptr ) {
-		free( m_memstart );
+		delete m_memstart;
 	}
 	#ifdef DEBUG
-		cout << "Destructor executed\n";
+		cout << "Destructor executed\n\n";
 	#endif
 }
