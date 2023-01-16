@@ -1,5 +1,5 @@
 CC=g++
-FLAGS=-std=c++03 -std=gnu++0x -Wall -pedantic -Werror -Wextra -DDEBUG0
+FLAGS=-std=c++20 -std=gnu++0x -Wall -pedantic -Werror -Wextra -DDEBUG0
 TEST_LIB=
 
 all: parser test_bin
@@ -11,10 +11,10 @@ test_bin: parser.o tests.cpp
 	$(CC) $(FLAGS) parser.o tests.cpp -o test_bin $(TEST_LIB)
 
 test:
-	./test_bin < test.txt
+	test_bin.exe < test.txt
 
 e1:
 	./test_bin < e1.txt
 
 clean:
-	rm -f *.o test_bin.*
+	del *.o test_bin.*

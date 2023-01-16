@@ -7,9 +7,9 @@ int mdi = 0;	// Index in mydata array
 int main()
 {
 	TokenParser parser;
-    	string line;
+    	std::string line;
 	parser.SetStartCallback( ShowCounters );
-    	while(std::getline(cin,line)) 
+    	while(std::getline(std::cin,line)) 
 	{
         	parser.Parse(line);
     	}

@@ -10,7 +10,7 @@
 #include <sstream>
 #include <string>
 
-using namespace std;
+//using namespace std;
 
 #define	MAX_DATA	1000
 

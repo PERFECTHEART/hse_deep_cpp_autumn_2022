@@ -29,18 +29,18 @@ void Data::ShowValue( char s1[], char s2[] )
 {
 	if( len == 0 )
 	{
-		cout << s2[0] << num << s2[1];
+		std::cout << s2[0] << num << s2[1];
 	}
 	else
 	{
-		cout << s1[0] << txt << s1[1];
+		std::cout << s1[0] << txt << s1[1];
 	}
-	cout << " ";
+	std::cout << " ";
 }
 
 void ShowCounters()
 {
-	cout << mdi << " strings/numbers buffered. Limit: " << MAX_DATA << "\n";
+	std::cout << mdi << " strings/numbers buffered. Limit: " << MAX_DATA << std::endl;
 }
 
 void ShowValues()
@@ -48,7 +48,7 @@ void ShowValues()
 	for( int i = 0; i < mdi; i++ )
 		mydata[i].ShowValue( (char *) "()", (char *) "##" );
 	if ( mdi > 0 )
-		cout << "\n";
+		std::cout << std::endl;
 }
 
 unsigned int Data::Store( std::string str, unsigned int pos)
@@ -126,7 +126,7 @@ int TokenParser::SetDigitTokenCallback( MyFuncPtr f )
 		if( mydata[i].len == 0 )
 			sum += f( mydata[i].num );
 	if( sum != 0 )
-		cout << "\nTotal count: " << sum << "\n";
+		std::cout << "\nTotal count: " << sum << std::endl;
 	return( 0 );
 }
 
@@ -134,7 +134,7 @@ int ShowOdd( uint64_t val )
 {
 	if( val % 2 > 0 )
 	{
-		cout << val << " ";
+		std::cout << val << " ";
 		return( 1 );
 	}
 	else
@@ -145,7 +145,7 @@ int ShowEven( uint64_t val )
 {
 	if( val % 2 == 0 )
 	{
-		cout << val << " ";
+		std::cout << val << " ";
 		return( 1 );
 	}
 	else
