@@ -1,10 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include <cassert>
+//#include <cassert>
 #include <stdexcept>
-
-using namespace std;
 
 #define BASE_TYPE	int
 
@@ -32,8 +30,9 @@ public:
 	Matrix  operator +(const Matrix &rhs)const ;
 	Matrix  operator *=(const size_t &num)const;
 	bool	operator ==(const Matrix &rhs)const;
+	bool	operator !=(const Matrix &rhs)const;
 	size_t 	getRows()const;
 	size_t 	getColumns()const;
 	Proxy operator[](const size_t &index )const;
-	friend ostream & operator<<( ostream & , const Matrix & );
+	friend std::ostream & operator<<( std::ostream & , const Matrix & );
 };

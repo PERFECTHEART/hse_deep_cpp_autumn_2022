@@ -52,6 +52,19 @@ bool Matrix::operator == (const Matrix & rhs) const
 	return res;
 }
 
+bool Matrix::operator != (const Matrix & rhs) const
+{
+	bool res (false);
+
+	if (d1 != rhs.d1 || d2 != rhs.d2)
+		res = true;
+	for (size_t i = 0; i < d1 && !res; i++)
+		for (size_t j = 0; j < d2 && !res; j++)
+			if (matrix[i][j] != rhs.matrix[i][j])
+				res = true;
+	return res;
+}
+
 Matrix Matrix::operator *= (const size_t &num) const
 {
 	for (size_t i = 0; i < d1; i++)
@@ -62,9 +75,13 @@ Matrix Matrix::operator *= (const size_t &num) const
 
 Matrix::~Matrix ()
 {
-	for (size_t i = 0; i < d1; i++)
-		delete[]matrix[i];
-	delete[]matrix;
+	if( matrix != nullptr )
+	{
+		for (size_t i = 0; i < d1; i++)
+			delete[]matrix[i];
+		delete[]matrix;
+		matrix = nullptr;
+	}
 }
 
 Matrix::Proxy Matrix::operator[](const size_t &index ) const
@@ -82,10 +99,10 @@ BASE_TYPE & Matrix::Proxy::operator[] (const size_t &index) const
 		throw std::out_of_range("Column index " + to_string(index) + " out of range [0.." + to_string(sd2-1) + "]");
 	return row[index];
 }
-ostream & operator<<( ostream & os, const Matrix & m)
+std::ostream & operator<<( std::ostream & os, const Matrix & m)
 {
-	for (size_t i=0; i < m.d1; ++i) {
-		for (size_t j=0; j < m.d2; ++j) {
+	for (size_t i=0; i < m.getRows(); ++i) {
+		for (size_t j=0; j < m.getColumns(); ++j) {
 			os << m.matrix[i][j] << "\t" ;
 		}
 		os << '\n';
