@@ -1,20 +1,20 @@
 #include "allocator.hpp"
 
-void Allocator::makeAllocator(size_t maxSize)
+void Allocator::makeAllocator(size_t maxSize) 
 {
 	if( m_memstart != nullptr ) {
 		delete m_memstart;
 		m_memstart = nullptr;
 		#ifdef DEBUG
-			cout << "Memory reallocated\n";
+			std::cout << "Memory reallocated" << std::endl;
 		#endif
 	}
-	if ( maxSize > 0)
+	if ( maxSize > 0 )
 		m_memstart = new char[maxSize];
 	m_offset = (size_t) 0;
 	if( m_memstart == nullptr ) {
 		#ifdef DEBUG
-			cout << "Cannot allocate " << maxSize << " bytes of memory\n";
+			std::cout << "Cannot allocate " << maxSize << " bytes of memory\n";
 		#endif
 		m_total = (size_t) 0;
 	}
@@ -22,7 +22,7 @@ void Allocator::makeAllocator(size_t maxSize)
 		m_total = maxSize;
 	}
 	#ifdef DEBUG
-		cout << "Free memory: " << m_total << "\n";
+		std::cout << "Free memory: " << m_total << std::endl;
 	#endif
 }
 
@@ -44,16 +44,16 @@ char *Allocator::alloc(size_t size)
 		ptr = m_memstart + m_offset;
 		m_offset = m_offset + size;
 		#ifdef DEBUG
-			cout << size << " bytes taken\n";
+			std::cout << size << " bytes taken" << std::endl;
 		#endif
 	}
 	else {
 		#ifdef DEBUG
-			cout << size << " bytes allocating... Not enough memory in allocator\n";
+			std::cout << size << " bytes allocating... Not enough memory in allocator" << std::endl;
 		#endif
 	}
 	#ifdef DEBUG
-		cout << "Free memory: " << m_total - m_offset << "\n";
+		std::cout << "Free memory: " << m_total - m_offset << std::endl;
 	#endif
 	return ptr;
 }
@@ -62,13 +62,13 @@ void Allocator::reset()
 {
 	m_offset = 0;
 	#ifdef DEBUG
-		cout << "All memory released\n";
+		std::cout << "All memory released" << std::endl;
 	#endif
 }
 
 Allocator::Allocator() {
 	#ifdef DEBUG
-		cout << "Constructor executed\n";
+		std::cout << "Constructor executed" << std::endl;
 	#endif
 	m_memstart = nullptr;
 }
@@ -78,6 +78,6 @@ Allocator::~Allocator() {
 		delete m_memstart;
 	}
 	#ifdef DEBUG
-		cout << "Destructor executed\n\n";
+		std::cout << "Destructor executed" << std::endl << std::endl;
 	#endif
 }

@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-using namespace std;
-
 class Allocator
 {
 	char* m_memstart = nullptr;
