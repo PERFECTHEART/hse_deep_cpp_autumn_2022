@@ -1,5 +1,4 @@
 #include "matrix.hpp"
-using namespace std;
 
 static size_t sd2;
 
@@ -87,7 +86,7 @@ Matrix::~Matrix ()
 Matrix::Proxy Matrix::operator[](const size_t &index ) const
 {
 	if( d1 != 0 && index >= d1 ) 
-		throw std::out_of_range("Row index " + to_string(index) + " out of range [0.." + to_string(d1-1) + "]");
+		throw std::out_of_range("Row index " + std::to_string(index) + " out of range [0.." + std::to_string(d1-1) + "]");
 	else {
 		sd2 = d2;
 		return Proxy(matrix[index]);
@@ -96,7 +95,7 @@ Matrix::Proxy Matrix::operator[](const size_t &index ) const
 BASE_TYPE & Matrix::Proxy::operator[] (const size_t &index) const
 {
 	if( sd2 != 0 && index >= sd2 ) 
-		throw std::out_of_range("Column index " + to_string(index) + " out of range [0.." + to_string(sd2-1) + "]");
+		throw std::out_of_range("Column index " + std::to_string(index) + " out of range [0.." + std::to_string(sd2-1) + "]");
 	return row[index];
 }
 std::ostream & operator<<( std::ostream & os, const Matrix & m)
