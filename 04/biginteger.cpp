@@ -2,14 +2,26 @@
 #include <string>
 #include <string.h>
 
-BigInt::BigInt(): data(new BASE_TYPE[1]), len(1), sign(ZERO)
+BigInt::BigInt(): data(nullptr), len(0), sign(ZERO)
 {
+#ifdef DEBUG0
+	std::cout << "Empty constructor called" << std::endl;
+#endif
 	this->zero_data();
 }
 
 BigInt::~BigInt()
 {
-	delete [] data;
+
+#ifdef DEBUG0
+	std::cout << "Destructor called sign=[" << sign << "] len=" << len << std::endl;
+	if (data == nullptr)
+		std::cout << "Data already deleted" << std::endl;
+#endif
+	if (data != nullptr) {
+		delete [] data;
+		data = nullptr;
+	}
 }
 
 void BigInt::zero_data()
@@ -41,6 +53,9 @@ void BigInt::no_leading_zeros()
 }
 
 BigInt::BigInt(int32_t x) {
+#ifdef DEBUG0
+	std::cout << "Constructor from int32_t called" << std::endl;
+#endif
 	std::string str = std::to_string(x);
 	switch( str[0] )
 	{
@@ -55,6 +70,11 @@ BigInt::BigInt(int32_t x) {
 			sign = PLUS;
 	}
 	len = str.length();
+#ifdef DEBUG0
+	if ( data != nullptr ) {
+		std::cout << "*** Non empty data in constructor." << std::endl;
+	}
+#endif
 	data = new BASE_TYPE[len];
 	for( int i = str.length()-1; i >= 0; i-- ) {
 		data[i] = str[i] - '0';
@@ -62,6 +82,9 @@ BigInt::BigInt(int32_t x) {
 }
 
 BigInt::BigInt(std::string str) {
+#ifdef DEBUG0
+	std::cout << "Constructor from string [" << str << "] called" << std::endl;
+#endif
 	// Пустую строчку интерпретируем как "0"
 	if (str.length() == 0) {
         	sign = ZERO;
@@ -78,6 +101,8 @@ BigInt::BigInt(std::string str) {
 			sign = PLUS;
 		}
 		len = str.length();
+		if( data != nullptr )
+			delete [] data;
 		data = new BASE_TYPE[len];
 		this->zero_data();
  
@@ -90,7 +115,30 @@ BigInt::BigInt(std::string str) {
                                 
 BigInt::BigInt (const BigInt & rhs):data(new BASE_TYPE[rhs.len]), len(rhs.len), sign(rhs.sign)	// копирующий конструктор
 {
+#ifdef DEBUG0
+	std::cout << "Copying constructor called" << std::endl;
+#endif
 	memcpy(data, rhs.data, len * sizeof(BASE_TYPE));
+}
+
+BigInt::BigInt (BigInt&& rhs)
+{
+#ifdef DEBUG0
+	std::cout << "Moving constructor called" << std::endl;
+#endif
+	if (*this != rhs)
+	{
+		data = rhs.data;
+		rhs.data = nullptr;
+		len = rhs.len;
+		sign = rhs.sign;	
+		rhs.len = 0;
+		rhs.sign = '0';
+	}
+	#ifdef DEBUG0
+	else
+		std::cout << "Attempt to self-move" << std::endl;
+	#endif
 }
 
 BigInt BigInt::operator -()
@@ -102,7 +150,7 @@ BigInt BigInt::operator -()
 	return copy;
 }
 
-BigInt BigInt::operator +(const BigInt& num2) const
+BigInt BigInt::operator +(const BigInt& num2)
 {
 	size_t newlen = len + num2.len;
 	BigInt res(std::string(newlen,'1'));
@@ -137,19 +185,19 @@ BigInt BigInt::operator +(const BigInt& num2) const
 	return res;
 }
 
-BigInt BigInt::operator +(int32_t x) const
+BigInt BigInt::operator +(int32_t x)
 {
 	BigInt num2(x);
 	return *this + num2;
 }
 
-BigInt BigInt::operator -(int32_t x) const
+BigInt BigInt::operator -(int32_t x)
 {
 	BigInt num2(x);
 	return *this - num2;
 }
 
-BigInt BigInt::operator *(int32_t x) const
+BigInt BigInt::operator *(int32_t x)
 {
 	BigInt num2(x);
 	return *this * num2;
@@ -163,7 +211,6 @@ BigInt BigInt::operator -(const BigInt& num2) const
 	BigInt lnum1(*this);
 	BigInt lnum2 = num2;
 
-//std::cout << "lnum1: " << lnum1  << " lnum2: " << lnum2 << std::endl;
 	if( lnum2.sign == ZERO ) {	// x - 0 = x
 		res = lnum1;
 	}
@@ -214,7 +261,7 @@ BigInt BigInt::operator -(const BigInt& num2) const
 	return res;
 }
 
-BigInt BigInt::operator *(const BigInt& num2) const
+BigInt BigInt::operator *(const BigInt& num2)
 {
 	size_t newlen = len + num2.len;
 	BigInt res(std::string(newlen,'1'));
@@ -331,17 +378,31 @@ BigInt BigInt::operator =(const BigInt & rhs)	// перегружаем опер
 {
 	len = rhs.len;
 	sign = rhs.sign;
+	if( data != nullptr )
+	{
+		delete [] data;
+	}
+	data = new BASE_TYPE(len);
 	memcpy( data, rhs.data, len * sizeof(BASE_TYPE));
 	return *this;
 }
 
 BigInt& BigInt::operator =(BigInt&& num2) // присваивание перемещением
 {
-	if( this != &num2 ) {
+#ifdef DEBUG0
+	std::cout << "Assignment by movement" << std::endl;
+#endif
+	if( *this != num2 ) {
+		if( data != nullptr )
+			delete [] data;
 		data = num2.data;
 		len = num2.len;
 		sign = num2.sign;
 		num2.data = nullptr;
 	}
+	#ifdef DEBUG0
+	else
+		std::cout << "Attempt to self-move assign" << std::endl;
+	#endif
 	return *this;
 }
