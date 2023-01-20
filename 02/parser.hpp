@@ -19,16 +19,16 @@ class TokenParser
 public:
 //	TokenParser() = default;
 
-    	// Устанавливаем callback-функцию перед стартом парсинга.
-	SetStartCallback( void (*f)() );
+    	// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј callback-С„СѓРЅРєС†РёСЋ РїРµСЂРµРґ СЃС‚Р°СЂС‚РѕРј РїР°СЂСЃРёРЅРіР°.
+	int SetStartCallback( void (*f)() );
 
-    	// Устанавливаем callback-функцию после окончания парсинга.
-	SetEndCallback( void (*f)() );
+    	// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј callback-С„СѓРЅРєС†РёСЋ РїРѕСЃР»Рµ РѕРєРѕРЅС‡Р°РЅРёСЏ РїР°СЂСЃРёРЅРіР°.
+	int SetEndCallback( void (*f)() );
 
-    	// Устанавливаем callback-функцию для обработки чисел.
-	SetDigitTokenCallback( int (*f)(uint64_t) );
+    	// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј callback-С„СѓРЅРєС†РёСЋ РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё С‡РёСЃРµР».
+	int SetDigitTokenCallback( int (*f)(uint64_t) );
 
-    	// Тут другие методы для установки callback-функций.
+    	// РўСѓС‚ РґСЂСѓРіРёРµ РјРµС‚РѕРґС‹ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё callback-С„СѓРЅРєС†РёР№.
     	//...
 	void Parse(const std::string &);
 };
@@ -48,3 +48,4 @@ void ShowCounters();
 void ShowValues();
 int ShowOdd(uint64_t);
 int ShowEven(uint64_t);
+
