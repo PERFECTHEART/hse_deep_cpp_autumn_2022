@@ -39,7 +39,9 @@ public:
 
     Error process(bool &arg)
     {
+#ifdef DEBUG0
         std::cout << "Serializing bool: " << arg << std::endl;
+#endif
         std::string val;
         if (arg)
         {
@@ -49,7 +51,9 @@ public:
         {
             val = "false";
         }
+#ifdef DEBUG0
         std::cout << "Serialized bool: " << val << std::endl;
+#endif
         if (out_.tellp() == std::streampos(0))
         {
             out_ << val;
@@ -64,7 +68,9 @@ public:
 
     Error process(uint64_t &arg)
     {
+#ifdef DEBUG0
         std::cout << "Serializing int: " << arg << std::endl;
+#endif
         if (out_.tellp() == std::streampos(0))
         {
             out_ << arg;
@@ -118,7 +124,9 @@ public:
     {
         std::string text;
         in_ >> text;
+#ifdef DEBUG0
         std::cout << "Serializing bool: " << text << std::endl;
+#endif
 
         if (text == "true")
             value = true;
@@ -135,8 +143,9 @@ public:
     {
         std::string text;
         in_ >> text;
+#ifdef DEBUG0
         std::cout << "Deserializing int: " << text << std::endl;
-
+#endif
         if (isNumeric(text))
         {
             std::istringstream iss(text);
@@ -144,7 +153,9 @@ public:
         }
         else
         {
-std::cout << "Invalid value" << std::endl;
+	    #ifdef DEBUG0
+	    std::cout << "Invalid value" << std::endl;
+            #endif
             return Error::CorruptedArchive;
         }
         return Error::NoError;
