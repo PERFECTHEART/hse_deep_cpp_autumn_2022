@@ -1,0 +1,14 @@
+(venv) [egor@mail lab8]$ ./main.py
+ json.loads exec time: 2.34098219871521
+ json.dumps exec time: 3.397562026977539
+
+cjson.loads exec time: 3.0263283252716064
+cjson.dumps exec time: 3.5606000423431396
+
+ujson.loads exec time: 1.8852996826171875
+ujson.dumps exec time: 3.4592888355255127
+
+utils.loads exec time: 2.7189126014709473
+utils.dumps exec time: 1.6371254920959473
+
+(venv) [egor@mail lab8]$
