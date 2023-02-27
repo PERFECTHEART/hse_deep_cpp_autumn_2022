@@ -1,14 +1,16 @@
 (venv) [egor@mail lab8]$ ./main.py
- json.loads exec time: 2.34098219871521
- json.dumps exec time: 3.397562026977539
+ json.loads exec time: 3.753469228744507
+ json.dumps exec time: 5.461870908737183
 
-cjson.loads exec time: 3.0263283252716064
-cjson.dumps exec time: 3.5606000423431396
+cjson.loads exec time: 4.035337924957275
+cjson.dumps exec time: 5.70137357711792
 
-ujson.loads exec time: 1.8852996826171875
-ujson.dumps exec time: 3.4592888355255127
+ujson.loads exec time: 3.262877941131592
+ujson.dumps exec time: 5.453709125518799
 
-utils.loads exec time: 2.7189126014709473
-utils.dumps exec time: 1.6371254920959473
+utils.loads exec time: 3.824202060699463
+utils.dumps exec time: 1.9069645404815674
 
+Test loads() == json.loads() == ujson_loads() == cjson.loads()
+Test x == dumps(loads(x)) for ['testfl.json', 'bool.json', 'dummy.json', 'file_size2.json', 'file_perm.json', 'in.json', 'file_size.json']
 (venv) [egor@mail lab8]$

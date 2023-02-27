@@ -6,8 +6,8 @@ import simplejson as cjson
 import time
 import utils
 LOOP=10
-LOOP2=10
-files=['file_size2.json', 'file_perm.json', 'in.json', 'file_size.json']
+
+files=['testfl.json', 'bool.json', 'dummy.json', 'file_size2.json', 'file_perm.json', 'in.json', 'file_size.json']
 def main():
     datas = [None] * len(files)
     json_doc = [None] * len(files)
@@ -15,6 +15,7 @@ def main():
     ujson_doc = [None] * len(files)
     utils_doc = [None] * len(files)
     i=0
+
     for filename in files:
         with open(filename, 'r') as file:
             datas[i] = file.read()
@@ -31,7 +32,7 @@ def main():
     end_ts = time.time()
     print(f" json.loads exec time: {end_ts-start_ts}")
     start_ts = time.time()
-    for i in range(LOOP2):
+    for i in range(LOOP):
         for json_d in json_doc:
             json_str = json.dumps(json_d)
     end_ts = time.time()
@@ -47,7 +48,7 @@ def main():
     end_ts = time.time()
     print(f"cjson.loads exec time: {end_ts-start_ts}")
     start_ts = time.time()
-    for i in range(LOOP2):
+    for i in range(LOOP):
         for cjson_d in cjson_doc:
             cjson_str = json.dumps(cjson_d)
     end_ts = time.time()
@@ -63,12 +64,11 @@ def main():
     end_ts = time.time()
     print(f"ujson.loads exec time: {end_ts-start_ts}")
     start_ts = time.time()
-    for i in range(LOOP2):
+    for i in range(LOOP):
         for ujson_d in ujson_doc:
             ujson_str = json.dumps(ujson_d)
     end_ts = time.time()
     print(f"ujson.dumps exec time: {end_ts-start_ts}\n")
-    #print(ujson_str)
 
     # UTILS.JSON
     start_ts = time.time()
@@ -80,16 +80,19 @@ def main():
     end_ts = time.time()
     print(f"utils.loads exec time: {end_ts-start_ts}")
     start_ts = time.time()
-    for i in range(LOOP2):
+    for i in range(LOOP):
         for utils_d in utils_doc:
-            #print(utils_d)
             utils_str = utils.dumps(utils_d)
-            #print(utils_str)
     end_ts = time.time()
     print(f"utils.dumps exec time: {end_ts-start_ts}\n")
 
+    # Test loads
+    print("Test loads() == json.loads() == ujson_loads() == cjson.loads()")
     for i in range(len(json_doc)):
         assert json_doc[i] == ujson_doc[i] == cjson_doc[i] == utils_doc[i]
+
+    # Test dumps
+    print(f"Test x == dumps(loads(x)) for {files}")
     for utils_d in utils_doc:
         utils_str = utils.dumps(utils_d)
         assert utils_str == utils.dumps(utils.loads(utils_str))

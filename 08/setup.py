@@ -7,7 +7,6 @@ def main():
         author="Egor Mushenko",
         ext_modules=[Extension("utils", ["utils.c"])]
     )
-  
 
 if __name__ == "__main__":
     main()
