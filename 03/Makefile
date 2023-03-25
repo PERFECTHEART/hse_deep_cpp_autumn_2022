@@ -2,16 +2,16 @@ CC=g++
 FLAGS=-std=c++20 -std=gnu++0x -Wall -pedantic -Werror -Wextra -DDEBUG0
 TEST_LIB=-lgtest -lgtest_main -lpthread
 
-all: matrix.o main.exe
+all: matrix.o tests.exe
 
-matrix.o: matrix.cpp matrix.hpp main.cpp Makefile
+matrix.o: matrix.cpp matrix.hpp tests.cpp Makefile
 	$(CC) $(FLAGS) -c matrix.cpp
 
-main.exe: matrix.o main.cpp
-	$(CC) $(FLAGS) matrix.o main.cpp -o main.exe $(TEST_LIB)
+tests.exe: matrix.o tests.cpp
+	$(CC) $(FLAGS) matrix.o tests.cpp -o tests.exe $(TEST_LIB)
 
-test: main.exe
-	main.exe
+test: tests.exe
+	tests.exe
 
 clean:
-	del *.o main.exe
+	del *.o tests.exe
