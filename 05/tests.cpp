@@ -63,15 +63,52 @@ TEST(Lab5, not_ok)
 	Serializer serializer(stream);
 	Deserializer deserializer(stream);
 
-	err = serializer.save(z);
+	err = serializer.save(x);
 	ASSERT_EQ(err, Error::NoError);
-	err = deserializer.load(x);
+	err = deserializer.load(z);
 #ifdef DEBUG0
 	std::cout << "Corrupted archive" << std::endl;
 #endif
 	ASSERT_EQ(x.a, z.a);
 	ASSERT_NE(x.b, z.b);
 	ASSERT_NE(x.c, z.c);
+	ASSERT_EQ(err, Error::CorruptedArchive);
+}
+
+TEST(Lab5, corrupt_test)
+{
+	Data1b x { true };
+	Data1i z { 2 };
+	Error err;
+	std::stringstream stream;
+	Serializer serializer(stream);
+	Deserializer deserializer(stream);
+
+	err = serializer.save(x);
+	ASSERT_EQ(err, Error::NoError);
+	err = deserializer.load(z);
+#ifdef DEBUG0
+	std::cout << "Corrupted archive" << std::endl;
+#endif
+	ASSERT_NE(x.a, z.a);
+	ASSERT_EQ(err, Error::CorruptedArchive);
+}
+
+TEST(Lab5, corrupt_test_string)
+{	
+	Data1str x { "teststring" };
+	Data3i z { 0, 1, 3 };
+	Error err;
+	std::stringstream stream;
+	Serializer serializer(stream);
+	Deserializer deserializer(stream);	
+	
+	err = serializer.save(x);
+	ASSERT_EQ(err, Error::NoError);
+	err = deserializer.load(z);
+#ifdef DEBUG0
+	std::cout << "Corrupted archive" << std::endl;
+#endif
 	ASSERT_EQ(err, Error::CorruptedArchive);
 }
 
