@@ -1,12 +1,14 @@
 CC=g++
-FLAGS=-std=c++20 -std=gnu++0x -Wall -pedantic -Werror -Wextra -DDEBUG0
+FLAGS=-std=c++20 -std=gnu++0x -Wall -pedantic -Werror -Wextra -DDEBUG
 TEST_LIB=-lgtest_main -lgtest -lpthread
 
-test_bin.exe: serializer.hpp main.cpp Makefile
-	$(CC) $(FLAGS) $(INC) main.cpp -o test_bin $(TEST_LIB)
+all: test_bin.exe test
+
+test_bin.exe: serializer.hpp tests.cpp Makefile
+	$(CC) $(FLAGS) $(INC) tests.cpp -o test_bin.exe $(TEST_LIB)
 
 test: test_bin.exe
-	./test_bin
+	./test_bin.exe
 
 clean:
-	rm -f *.o test_bin
+	del *.o test_bin.exe

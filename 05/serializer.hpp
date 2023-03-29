@@ -7,16 +7,17 @@
 enum class Error
 {
     NoError,
-    CorruptedArchive
+    CorruptedArchive,
+    InvalidNumericValue
 };
 
 class Serializer
 {
+private:
     static constexpr char Separator = ' ';
 public:
-    explicit Serializer(std::ostream& out)
-        : out_(out)
-    {}
+    explicit Serializer(std::ostream& out) : out_(out) {}
+    ~Serializer() {}
 
     template <class T>
     Error save(T& object)
@@ -37,6 +38,7 @@ public:
         return process(val);
     }
 
+private:
     Error process(bool &arg)
     {
 #ifdef DEBUG0
@@ -83,8 +85,23 @@ public:
         return Error::NoError;
     }
 
-    
-private:
+    Error process(std::string &arg)
+    {
+#ifdef DEBUG0
+        std::cout << "Serializing string: " << arg << std::endl;
+#endif
+        if (out_.tellp() == std::streampos(0))
+        {
+            out_ << arg;
+        }
+        else 
+        {
+            out_ << Separator;
+            out_ << arg;
+        }
+        return Error::NoError;
+    }
+
     std::ostream& out_;
 };
 
@@ -92,9 +109,8 @@ class Deserializer
 {
     static constexpr char Separator = ' ';
 public:
-    explicit Deserializer(std::istream& in)
-        : in_(in)
-    {}
+    explicit Deserializer(std::istream& in) : in_(in) {}
+    ~Deserializer() {}
 
 
     template <class T>
@@ -150,6 +166,8 @@ public:
         {
             std::istringstream iss(text);
             iss >> value;
+	    if(text != std::to_string(value))
+		return Error::InvalidNumericValue;
         }
         else
         {
@@ -158,6 +176,18 @@ public:
             #endif
             return Error::CorruptedArchive;
         }
+        return Error::NoError;
+    }
+
+    Error load(std::string& value)
+    {
+        std::string text;
+        in_ >> text;
+#ifdef DEBUG0
+        std::cout << "Deserializing string: " << text << std::endl;
+#endif
+        std::istringstream iss(text);
+        iss >> value;
         return Error::NoError;
     }
 
@@ -210,5 +240,56 @@ struct Data3i
     Error deserialize(Deserializer& deserializer)
     {
         return deserializer(a, b, c);
+    }
+};
+
+struct Data1i
+{
+    uint64_t a;
+
+    template <class Serializer>
+    Error serialize(Serializer& serializer)
+    {
+        return serializer(a);
+    }
+
+    template <class Deserializer>
+    Error deserialize(Deserializer& deserializer)
+    {
+        return deserializer(a);
+    }
+};
+
+struct Data1b
+{
+    bool a;
+
+    template <class Serializer>
+    Error serialize(Serializer& serializer)
+    {
+        return serializer(a);
+    }
+
+    template <class Deserializer>
+    Error deserialize(Deserializer& deserializer)
+    {
+        return deserializer(a);
+    }
+};
+
+struct Data1str
+{
+    std::string a;
+
+    template <class Serializer>
+    Error serialize(Serializer& serializer)
+    {
+        return serializer(a);
+    }
+
+    template <class Deserializer>
+    Error deserialize(Deserializer& deserializer)
+    {
+        return deserializer(a);
     }
 };
