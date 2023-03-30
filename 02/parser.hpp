@@ -14,8 +14,8 @@ typedef enum {
 } parseState;
 
 using fParseState = void(*)(parseState*);
-using fStringPtr = std::string(*)(std::string);
-using fInt64Ptr = uint64_t(*)(uint64_t);
+using fStringPtr = void(*)(std::string);
+using fInt64Ptr = void(*)(uint64_t);
 
 class TokenParser {
 public:
@@ -25,17 +25,7 @@ public:
   fStringPtr stringTokenCallbackPtr = nullptr;
   fInt64Ptr digitTokenCallbackPtr = nullptr;
 
-private: 
-  std::vector <std::string> StringTokens;
-  std::vector <uint64_t> DigitTokens;
-
 public: 
-  std::vector <std::string> getStringTokens() {
-    return StringTokens;
-  }
-  std::vector <uint64_t> getDigitTokens() {
-    return DigitTokens;
-  }
   parseState getState() {
     return PState;
   }
@@ -115,13 +105,11 @@ public:
             uint64_t x;
             std::istringstream iss(str.substr(numpos, fin - numpos));
             iss >> x;
-            x = digitTokenCallbackPtr(x);
-            DigitTokens.push_back(x);
+            digitTokenCallbackPtr(x);
           }
         } else { // Строковый токен
           if (stringTokenCallbackPtr != nullptr) {
-            std::string txt = stringTokenCallbackPtr(str.substr(pos, fin - pos));
-            StringTokens.push_back(txt);
+            stringTokenCallbackPtr(str.substr(pos, fin - pos));
           }
         }
       } // if( fin != pos )

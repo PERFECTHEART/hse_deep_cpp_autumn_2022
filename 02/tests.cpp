@@ -17,20 +17,26 @@
  
  */
 
+
+std::vector <std::string> StringTokens;
+std::vector <uint64_t> DigitTokens;
+
 void setStartState(parseState *state) { 
   *state = start;
+  StringTokens.clear();
+  DigitTokens.clear();
 }
 
 void setEndState(parseState *state) {
   *state = end;
 }
 
-std::string runString(std::string str) {
-  return str;
+void runString(std::string str) {
+  StringTokens.push_back(str);
 }
 
-uint64_t runDigit(uint64_t num) {
-  return num;
+void runDigit(uint64_t num) {
+  DigitTokens.push_back(num);
 }
 
 TEST(TokenParser, NoStartEndCallBack)
@@ -59,146 +65,136 @@ TEST(TokenParser, EndCallBack)
 TEST(TokenParser, ValidNumber)
 {
   TokenParser parser;
+  parser.SetStartCallback(&setStartState);
   parser.SetDigitTokenCallback(&runDigit);
   parser.Parse("0 18446744073709551615 9999999999999999999");
-  std::vector <uint64_t> dt = parser.getDigitTokens();
 
-  ASSERT_EQ(dt.size(), 3ul);
-  ASSERT_EQ(dt[0], 0ul);
-  ASSERT_EQ(dt[1], 18446744073709551615ul);
-  ASSERT_EQ(dt[2], 9999999999999999999ul);
+  ASSERT_EQ(DigitTokens.size(), 3ul);
+  ASSERT_EQ(DigitTokens[0], 0ul);
+  ASSERT_EQ(DigitTokens[1], 18446744073709551615ul);
+  ASSERT_EQ(DigitTokens[2], 9999999999999999999ul);
 }
 
 TEST(TokenParser, InvalidNumber)
 {
   TokenParser parser;
+  parser.SetStartCallback(&setStartState);
   parser.SetDigitTokenCallback(&runDigit);
   parser.SetStringTokenCallback(&runString);
   parser.Parse("18446744073709551616");
-  std::vector <uint64_t> dt = parser.getDigitTokens();
-  std::vector <std::string> st = parser.getStringTokens();
-  ASSERT_EQ(dt.size(), 0ul);
-  ASSERT_EQ(st[0], "18446744073709551616");
+  ASSERT_EQ(DigitTokens.size(), 0ul);
+  ASSERT_EQ(StringTokens[0], "18446744073709551616");
 }
 
 TEST(TokenParser, LeadingZeros)
 {
   TokenParser parser;
+  parser.SetStartCallback(&setStartState);
   parser.SetDigitTokenCallback(&runDigit);
   parser.SetStringTokenCallback(&runString);
   parser.Parse("00 001 0002 00003 00004 0000000000000000000000000000990");
-  std::vector <uint64_t> dt = parser.getDigitTokens();
-  std::vector <std::string> st = parser.getStringTokens();
-  ASSERT_EQ(dt.size(), 6ul);
-  ASSERT_EQ(st.size(), 0ul);
-  ASSERT_EQ(dt[0], 0ul);
-  ASSERT_EQ(dt[1], 1ul);
-  ASSERT_EQ(dt[2], 2ul);
-  ASSERT_EQ(dt[3], 3ul);
-  ASSERT_EQ(dt[4], 4ul);
-  ASSERT_EQ(dt[5], 990ul);
+  ASSERT_EQ(DigitTokens.size(), 6ul);
+  ASSERT_EQ(StringTokens.size(), 0ul);
+  ASSERT_EQ(DigitTokens[0], 0ul);
+  ASSERT_EQ(DigitTokens[1], 1ul);
+  ASSERT_EQ(DigitTokens[2], 2ul);
+  ASSERT_EQ(DigitTokens[3], 3ul);
+  ASSERT_EQ(DigitTokens[4], 4ul);
+  ASSERT_EQ(DigitTokens[5], 990ul);
 }
 
 TEST(TokenParser, EmptyLine)
 {
   TokenParser parser;
 
+  parser.SetStartCallback(&setStartState);
   parser.SetDigitTokenCallback(&runDigit);
   parser.SetStringTokenCallback(&runString);
   parser.Parse("");
-  std::vector <uint64_t> dt = parser.getDigitTokens();
-  std::vector <std::string> st = parser.getStringTokens();
-  ASSERT_EQ(dt.size() + st.size(), 0ul);
+  ASSERT_EQ(DigitTokens.size() + StringTokens.size(), 0ul);
 }
 
 TEST(TokenParser, LineOfSpaces)
 {
   TokenParser parser;
+  parser.SetStartCallback(&setStartState);
   parser.SetDigitTokenCallback(&runDigit);
   parser.SetStringTokenCallback(&runString);
   parser.Parse(" \t \n \v \f \r");
-  std::vector <uint64_t> dt = parser.getDigitTokens();
-  std::vector <std::string> st = parser.getStringTokens();
-  ASSERT_EQ(dt.size() + st.size(), 0ul);
+  ASSERT_EQ(DigitTokens.size() + StringTokens.size(), 0ul);
 }
 
 TEST(TokenParser, SingleSpace)
 {
   TokenParser parser;
+  parser.SetStartCallback(&setStartState);
   parser.SetDigitTokenCallback(&runDigit);
   parser.SetStringTokenCallback(&runString);
   parser.Parse(" ");
-  std::vector <uint64_t> dt = parser.getDigitTokens();
-  std::vector <std::string> st = parser.getStringTokens();
-  ASSERT_EQ(dt.size(), 0ul);
-  ASSERT_EQ(st.size(), 0ul);
+  ASSERT_EQ(DigitTokens.size(), 0ul);
+  ASSERT_EQ(StringTokens.size(), 0ul);
 }
 
 TEST(TokenParser, SingleDigit)
 {
   TokenParser parser;
+  parser.SetStartCallback(&setStartState);
   parser.SetDigitTokenCallback(&runDigit);
   parser.SetStringTokenCallback(&runString);
   parser.Parse("7");
-  std::vector <uint64_t> dt = parser.getDigitTokens();
-  std::vector <std::string> st = parser.getStringTokens();
-  ASSERT_EQ(dt.size(), 1ul);
-  ASSERT_EQ(dt[0], 7ul);
-  ASSERT_EQ(st.size(), 0ul);
+  ASSERT_EQ(DigitTokens.size(), 1ul);
+  ASSERT_EQ(DigitTokens[0], 7ul);
+  ASSERT_EQ(StringTokens.size(), 0ul);
 }
 
 TEST(TokenParser, SingleChar)
 {
   TokenParser parser;
+  parser.SetStartCallback(&setStartState);
   parser.SetDigitTokenCallback(&runDigit);
   parser.SetStringTokenCallback(&runString);
   parser.Parse("!");
-  std::vector <uint64_t> dt = parser.getDigitTokens();
-  std::vector <std::string> st = parser.getStringTokens();
-  ASSERT_EQ(dt.size(), 0ul);
-  ASSERT_EQ(st.size(), 1ul);
-  ASSERT_EQ(st[0], "!");
+  ASSERT_EQ(DigitTokens.size(), 0ul);
+  ASSERT_EQ(StringTokens.size(), 1ul);
+  ASSERT_EQ(StringTokens[0], "!");
 }
 
 TEST(TokenParser, NoCharMixDigits)
 {
   TokenParser parser;
+  parser.SetStartCallback(&setStartState);
   parser.SetDigitTokenCallback(&runDigit);
   parser.SetStringTokenCallback(&runString);
   parser.Parse(" 1a a1a a1 1a1 2z");
-  std::vector <uint64_t> dt = parser.getDigitTokens();
-  std::vector <std::string> st = parser.getStringTokens();
-  ASSERT_EQ(dt.size(), 0ul);
-  ASSERT_EQ(st.size(), 5ul);
+  ASSERT_EQ(DigitTokens.size(), 0ul);
+  ASSERT_EQ(StringTokens.size(), 5ul);
 }
 
 TEST(TokenParser, BothSidesSpaces)
 {
   TokenParser parser;
+  parser.SetStartCallback(&setStartState);
   parser.SetDigitTokenCallback(&runDigit);
   parser.SetStringTokenCallback(&runString);
   parser.Parse("      Both  sides  are  spaces      ");
-  std::vector <uint64_t> dt = parser.getDigitTokens();
-  std::vector <std::string> st = parser.getStringTokens();
-  ASSERT_EQ(dt.size(), 0ul);
-  ASSERT_EQ(st.size(), 4ul);
+  ASSERT_EQ(DigitTokens.size(), 0ul);
+  ASSERT_EQ(StringTokens.size(), 4ul);
 }
 
 TEST(TokenParser, UTF8)
 {
   TokenParser parser;
+  parser.SetStartCallback(&setStartState);
   parser.SetDigitTokenCallback(&runDigit);
   parser.SetStringTokenCallback(&runString);
   parser.Parse("Эта строка в кодировке utf-8.");
-  std::vector <uint64_t> dt = parser.getDigitTokens();
-  std::vector <std::string> st = parser.getStringTokens();
-  ASSERT_EQ(dt.size(), 0ul);
-  ASSERT_EQ(st.size(), 5ul);
-  ASSERT_EQ(st[0], "Эта");
-  ASSERT_EQ(st[1], "строка");
-  ASSERT_EQ(st[2], "в");
-  ASSERT_EQ(st[3], "кодировке");
-  ASSERT_EQ(st[4], "utf-8.");
+  ASSERT_EQ(DigitTokens.size(), 0ul);
+  ASSERT_EQ(StringTokens.size(), 5ul);
+  ASSERT_EQ(StringTokens[0], "Эта");
+  ASSERT_EQ(StringTokens[1], "строка");
+  ASSERT_EQ(StringTokens[2], "в");
+  ASSERT_EQ(StringTokens[3], "кодировке");
+  ASSERT_EQ(StringTokens[4], "utf-8.");
 }
 
 int main(int argc, char **argv)
