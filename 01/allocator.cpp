@@ -3,7 +3,7 @@
 void Allocator::makeAllocator(size_t maxSize) 
 {
 	if( m_memstart != nullptr ) {
-		delete m_memstart;
+		delete [] m_memstart;
 		m_memstart = nullptr;
 		#ifdef DEBUG
 			std::cout << "Memory reallocated" << std::endl;
@@ -75,7 +75,7 @@ Allocator::Allocator() {
 
 Allocator::~Allocator() {
 	if( m_memstart != nullptr ) {
-		delete m_memstart;
+		delete [] m_memstart;
 	}
 	#ifdef DEBUG
 		std::cout << "Destructor executed" << std::endl << std::endl;
